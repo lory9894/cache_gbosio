@@ -2,7 +2,7 @@ let id;
 
 const options = {
   enableHighAccuracy: true,
-  timeout: 10000,
+  timeout: 5000,
   maximumAge: 0
 };
 
@@ -19,7 +19,7 @@ window.onload = function() {
     id_given = showRobot(id);
     navigator.geolocation.getCurrentPosition(success, error, options);
     if (id_given)
-        showCoord(null,null);
+        showCoord(id);
 }
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1);
@@ -64,4 +64,8 @@ function success(pos) {
 }
 function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+function showCoord(id) {
+
 }
