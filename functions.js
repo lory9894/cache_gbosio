@@ -2,7 +2,7 @@ let id;
 
 const options = {
   enableHighAccuracy: true,
-  timeout: 5000,
+  timeout: 10000,
   maximumAge: 0
 };
 
@@ -59,6 +59,8 @@ function success(pos) {
   console.log(`Latitude : ${crd.latitude}`);
   console.log(`Longitude: ${crd.longitude}`);
   console.log(`More or less ${crd.accuracy} meters.`);
+  $("#your_coord").html("Le tue coordinate sono: " + crd.latitude + " " + crd.longitude + " con una precisione di " + crd.accuracy + " metri.");
+
 }
 function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
