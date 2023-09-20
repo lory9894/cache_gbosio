@@ -1,4 +1,5 @@
 let id;
+const debug = false;
 
 const options = {
   enableHighAccuracy: true,
@@ -7,19 +8,21 @@ const options = {
 };
 
 window.onload = function() {
+    let promises = [];
+    promises.push(
     $.ajax({
         url: "https://worldtimeapi.org/api/ip",
         type: "GET",
-        dataType: "json",
-        success: function (data) {
-            checkTime(data);
-        }
-    });
+        dataType: "json"
+    }));
+    promises.push(getPosition());
     id = GetURLParameter('id');
     id_given = showRobot(id);
-    navigator.geolocation.getCurrentPosition(success, error, options);
-    if (id_given)
-        showCoord(id);
+    if (id_given) {
+        Promise.all(promises).then(function(values) {
+            showCoord(id, values[1], values[0]);
+        });
+    }
 }
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1);
@@ -38,7 +41,8 @@ function showRobot(id) {
     if (id >= 1 && id <= 8) {
     $("#robot").attr("src","images/"+ id + ".jpeg");
     }else{
-        //todo: errore
+        $("#message").text("Robot non trovato\n smettila di giocare con i parametri dell'url.");
+        $("#message").html($("#message").html().replace(/\n/g,'<br/>'));
         return false;
     }
     return true;
@@ -46,26 +50,74 @@ function showRobot(id) {
 
 function checkTime(data){
     var ora = data.datetime.split("T")[1].split(":")[0];
-    $("#time").html("Sono le ore " + ora );
+    if (debug) {
+        console.log(ora);
+        return true;
+    }
     if (ora >= 22 || ora <= 5) {
+        return true;
+    }
+    $("#message").text("Non è ora di fare certi discorsi\n ripassa più tardi");
+    $("#message").html($("#message").html().replace(/\n/g,'<br/>'));
+    return false;
+}
+function checkCoord(coord) {
+    //fittizie: N45.13892 E007.38268
+    // pitagora for the win
+    var distance = Math.sqrt(Math.pow(coord.latitude - 45.13892, 2) + Math.pow(coord.longitude - 7.38268, 2));
+    if (debug) {
+        console.log(coord.latitude);
+        console.log(coord.longitude);
+        console.log(distance)
+        return true;
 
     }
+    if (distance <= 0.001) { // 0.001 = 100m circa
+        return true;
+    }
+    $("#message").text("INSERIRE TESTO PER TROPPO DISTANTE");
+    $("#message").html($("#message").html().replace(/\n/g,'<br/>'));
+    return false
+}
+function getPosition() {
+    return new Promise(function(resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject, options)
+    });
 }
 
-function success(pos) {
-  const crd = pos.coords;
+function showCoord(id, geolocationPosition, date) {
+    if (checkTime(date) && checkCoord(geolocationPosition.coords)) {
+        switch (id){
+            case "1":
+                $("#message").text("coordinata 1");
+                break;
+            case "2":
+                $("#message").text("coordinata 2");
+                break;
+            case "3":
+                $("#message").text("coordinata 3");
+                break;
+            case "4":
+                $("#message").text("coordinata 4");
+                break;
+            case "5":
+                $("#message").text("coordinata 5");
+                break;
+            case "6":
+                $("#message").text("coordinata 6");
+                break;
+            case "7":
+                $("#message").text("coordinata 7");
+                break;
+            case "8":
+                $("#message").text("coordinata 8");
+                break;
 
-  console.log('Your current position is:');
-  console.log(`Latitude : ${crd.latitude}`);
-  console.log(`Longitude: ${crd.longitude}`);
-  console.log(`More or less ${crd.accuracy} meters.`);
-  $("#your_coord").html("Le tue coordinate sono: " + crd.latitude + " " + crd.longitude + " con una precisione di " + crd.accuracy + " metri.");
+                default:
+$("#message").text("Robot non trovato\n smettila di giocare con i parametri dell'url.");
+                break;
 
-}
-function error(err) {
-  console.warn(`ERROR(${err.code}): ${err.message}`);
-}
-
-function showCoord(id) {
-
+        }
+    $("#message").html($("#message").html().replace(/\n/g,'<br/>'));
+    }
 }
