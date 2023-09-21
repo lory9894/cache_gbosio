@@ -72,7 +72,7 @@ function checkCoord(coord) {
         return true;
 
     }
-    if (distance <= 0.001) { // 0.001 = 100m circa
+    if (distance <= 0.0002) { // 0.0002 = 2000m circa
         return true;
     }
     $("#message").text("INSERIRE TESTO PER TROPPO DISTANTE");
