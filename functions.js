@@ -75,7 +75,7 @@ function checkCoord(coord) {
     if (distance <= 0.0002) { // 0.0002 = 2000m circa
         return true;
     }
-    $("#message").text("INSERIRE TESTO PER TROPPO DISTANTE");
+    $("#message").text("Avvicinati.\nNon riesco a sentirti");
     $("#message").html($("#message").html().replace(/\n/g,'<br/>'));
     return false
 }
