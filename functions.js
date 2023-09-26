@@ -72,7 +72,7 @@ function checkCoord(coord) {
         return true;
 
     }
-    if (distance <= 0.0002) { // 0.0002 = 2000m circa
+    if (distance <= 0.02) { // 0.02 = 2000m circa
         return true;
     }
     $("#message").text("Avvicinati.\nNon riesco a sentirti");
